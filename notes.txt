@@ -1,0 +1,11 @@
+sudo pip install virtualenv
+mkdir crm && cd crm
+//Open the above folder in VSCode
+
+virtualenv env
+source env/bin/activate
+pip install django
+pip freeze > requirements.txt
+django-admin startproject djcrm .
+
+Add .gitignore file
