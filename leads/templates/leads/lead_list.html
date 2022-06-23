@@ -18,7 +18,11 @@
         <![endif]-->
         <h1>This is view </h1>
         {% for lead in leads %}
-            <h1>{{lead}}</h1>
+            <div class="lead">
+                <a href="/leads/{{ lead.pk }}">
+                    {{ lead.first_name }} {{ lead.last_name }} {{ lead.age }} </a>
+            </div>
+
         {% endfor %}
         <script src="" async defer></script>
     </body>
