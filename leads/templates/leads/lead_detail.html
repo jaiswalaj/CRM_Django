@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-        <a href="{% url 'leads:lead-list' %}">Go Back</a> <br/>
-        <a href="{% url 'leads:lead-update' lead.pk %}">Update</a> <br/>
-        <a href="{% url 'leads:lead-delete' lead.pk %}">Delete</a>
-        <h1>
-            {{ lead.first_name }} {{ lead.last_name }} {{ lead.age }} {{ lead.agent }}
-        </h1>
+{% block content %}
 
-</body>
-</html>
+    <a href="{% url 'leads:lead-list' %}">Go Back</a> <br />
+    <h1>Lead Detail</h1>
+    <a href="{% url 'leads:lead-update' lead.pk %}">Update</a> <br />
+    <a href="{% url 'leads:lead-delete' lead.pk %}">Delete</a>
+    <h1>
+        {{ lead.first_name }} {{ lead.last_name }} {{ lead.age }} {{ lead.agent }}
+    </h1>
+
+{% endblock content %}
