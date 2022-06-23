@@ -11,15 +11,19 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         
-        {% block content %}
+        <div class="max-w-7xl mx-auto">
+            {% include "navbar.html" %}
 
-        {% endblock content %}
+            {% block content %}
+            {% endblock content %}
+        </div>
 
         {% include "scripts.html" %}
     </body>
