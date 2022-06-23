@@ -8,4 +8,19 @@ pip install django
 pip freeze > requirements.txt
 django-admin startproject djcrm .
 
-Add .gitignore file
+//Add .gitignore file and push to github
+
+python manage.py runserver
+python manage.py migrate
+
+python manage.py startapp leads
+//Update settings.py to add "leads" app in INSTALLED APPS section
+
+//Add models in Lead app
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py createsuperuser
+sudo apt-get install sqlite3        //Required by SQLite extension of VS Code
+
+python manage.py shell
