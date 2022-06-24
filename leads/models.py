@@ -31,6 +31,7 @@ class Lead(models.Model):
         verbose_name = 'Lead'
         verbose_name_plural = 'Leads'
 
+
 class Agent(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     organisation = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -38,8 +39,10 @@ class Agent(models.Model):
     def __str__(self):
         return self.user.email
 
+
 def post_user_creation_signal(sender, instance, created, **kwargs):
     print(instance, created)
-    pass
+    if created:
+        UserProfile.objects.create(user=instance)
 
 post_save.connect(post_user_creation_signal, sender=User)
