@@ -40,9 +40,8 @@ class Agent(models.Model):
         return self.user.email
 
 
-def post_user_creation_signal(sender, instance, created, **kwargs):
-    print(instance, created)
+def post_user_created_signal(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
 
-post_save.connect(post_user_creation_signal, sender=User)
+post_save.connect(post_user_created_signal, sender=User)
