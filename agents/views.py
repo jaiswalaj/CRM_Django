@@ -1,20 +1,22 @@
 from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.shortcuts import reverse
 from leads.models import Agent
 from.forms import AgentModelForm
+from .mixins import OrganiserAndLoginRequiredMixin
 
 # Create your views here.
 
-class AgentListView(LoginRequiredMixin, generic.ListView):
+class AgentListView(OrganiserAndLoginRequiredMixin, generic.ListView):
     template_name = "agents/agent_list.html"
     context_object_name = "agents"
 
     def get_queryset(self):
-        return Agent.objects.all()
+        organisation = self.request.user.userprofile
+        return Agent.objects.filter(organisation=organisation)
 
-class AgentCreateView(LoginRequiredMixin, generic.CreateView):
+class AgentCreateView(OrganiserAndLoginRequiredMixin, generic.CreateView):
     template_name = "agents/agent_create.html"
     form_class = AgentModelForm
 
@@ -27,22 +29,33 @@ class AgentCreateView(LoginRequiredMixin, generic.CreateView):
         agent.save()
         return super(AgentCreateView, self).form_valid(form)
 
-class AgentDetailView(LoginRequiredMixin, generic.DetailView):
+class AgentDetailView(OrganiserAndLoginRequiredMixin, generic.DetailView):
     template_name = "agents/agent_detail.html"
-    queryset = Agent.objects.all()
     context_object_name = "agent"
 
-class AgentUpdateView(LoginRequiredMixin, generic.UpdateView):
+    def get_queryset(self):
+        organisation = self.request.user.userprofile
+        return Agent.objects.filter(organisation=organisation)
+
+
+class AgentUpdateView(OrganiserAndLoginRequiredMixin, generic.UpdateView):
     template_name = "agents/agent_update.html"
-    queryset = Agent.objects.all()
     form_class = AgentModelForm
 
     def get_success_url(self):
         return reverse("agents:agent-list")
 
-class AgentDeleteView(LoginRequiredMixin, generic.DeleteView):
+    def get_queryset(self):
+        organisation = self.request.user.userprofile
+        return Agent.objects.filter(organisation=organisation)
+
+
+class AgentDeleteView(OrganiserAndLoginRequiredMixin, generic.DeleteView):
     template_name = "agents/agent_delete.html"
-    queryset = Agent.objects.all()
+
+    def get_queryset(self):
+        organisation = self.request.user.userprofile
+        return Agent.objects.filter(organisation=organisation)
 
     def get_success_url(self):
         return reverse("agents:agent-list")
