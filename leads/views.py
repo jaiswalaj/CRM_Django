@@ -27,8 +27,13 @@ def landing_page(request):
 # Lead List Page both as Class based view and as Function based view. Only one is being used in production.
 class LeadListView(LoginRequiredMixin, generic.ListView):
     template_name = "leads/lead_list.html"
-    queryset = Lead.objects.all()
     context_object_name = "leads"
+
+    def get_queryset(self):
+        queryset = Leads.objects.all()
+        if self.request.user.is_agent:
+            queryset = queryset.filter(agent__user=self.request.user)
+        return queryset
 
 def lead_list(request):
     leads = Lead.objects.all()
