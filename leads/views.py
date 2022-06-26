@@ -30,9 +30,13 @@ class LeadListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "leads"
 
     def get_queryset(self):
-        queryset = Leads.objects.all()
-        if self.request.user.is_agent:
-            queryset = queryset.filter(agent__user=self.request.user)
+        user = self.request.user
+
+        if user.is_organiser:
+            queryset = Lead.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = Lead.objects.filter(organisation=user.agent.organisation)
+            queryset = queryset.filter(agent__user=user)
         return queryset
 
 def lead_list(request):
@@ -46,8 +50,18 @@ def lead_list(request):
 # Lead Detail Page both as Class based view and as Function based view. Only one is being used in production.
 class LeadDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "leads/lead_detail.html"
-    queryset = Lead.objects.all()
     context_object_name = "lead"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_organiser:
+            queryset = Lead.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = Lead.objects.filter(organisation=user.agent.organisation)
+            queryset = queryset.filter(agent__user=user)
+        return queryset
+
 
 def lead_detail(request, pk):
     lead = Lead.objects.get(id=pk)
@@ -83,8 +97,13 @@ def lead_create(request):
 # Lead Create Page both as Class based view and as Function based view. Only one is being used in production.
 class LeadUpdateView(OrganiserAndLoginRequiredMixin, generic.UpdateView):
     template_name = "leads/lead_update.html"
-    queryset = Lead.objects.all()
     form_class = LeadModelForm
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Lead.objects.filter(organisation=user.userprofile)
+        return queryset
+
 
     def get_success_url(self):
         return reverse("leads:lead-list")
@@ -108,7 +127,11 @@ def lead_update(request, pk):
 # Lead Create Page both as Class based view and as Function based view. Only one is being used in production.
 class LeadDeleteView(OrganiserAndLoginRequiredMixin, generic.DeleteView):
     template_name = "leads/lead_delete.html"
-    queryset = Lead.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Lead.objects.filter(organisation=user.userprofile)
+        return queryset
 
     def get_success_url(self):
         return reverse("leads:lead-list")
