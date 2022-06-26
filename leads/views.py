@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
@@ -75,6 +76,15 @@ def lead_detail(request, pk):
 class LeadCreateView(OrganiserAndLoginRequiredMixin, generic.CreateView):
     template_name = "leads/lead_create.html"
     form_class = LeadModelForm
+
+    def form_valid(self, form):
+        send_mail(
+            subject="A Lead has been created",
+            message="A lead with details has been created. Visit your account",
+            from_email="test@test.com",
+            recipient_list=["test2@test.com"],
+        )
+        return super(LeadCreateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse("leads:lead-list")
